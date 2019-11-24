@@ -1,0 +1,61 @@
+CREATE SCHEMA `jdbc_java` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+CREATE TABLE `jdbc_java`.`tipo_conductor` (
+  `id` INT NOT NULL,
+  `nombre` VARCHAR(255) NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `jdbc_java`.`tipo_vehiculo` (
+  `id` INT NOT NULL,
+  `nombre` VARCHAR(255) NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `jdbc_java`.`vehiculo` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `marca` VARCHAR(255) NOT NULL,
+  `modelo` VARCHAR(255) NOT NULL,
+  `matricula` VARCHAR(255) NULL,
+  `anio` INT NULL,
+  `id_tipo_vehiculo` INT,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_vehiculo_tipo_vehiculo`
+    FOREIGN KEY (`id_tipo_vehiculo`)
+    REFERENCES `jdbc_java`.`tipo_vehiculo` (`id`));
+
+CREATE TABLE `jdbc_java`.`conductor` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(255) NOT NULL,
+  `tipo_licencia` VARCHAR(255) NOT NULL,
+  `id_vehiculo` INT,
+  `id_tipo_conductor` INT,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_conductor_vehiculo`
+    FOREIGN KEY (`id_vehiculo`)
+    REFERENCES `jdbc_java`.`vehiculo` (`id`),
+  CONSTRAINT `fk_conductor_tipo_conductor`
+    FOREIGN KEY (`id_tipo_conductor`)
+    REFERENCES `jdbc_java`.`tipo_conductor` (`id`));
+
+CREATE TABLE `jdbc_java`.`contrato` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `id_vehiculo` INT,
+  `id_conductor` INT,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_contrato_vehiculo`
+    FOREIGN KEY (`id_vehiculo`)
+    REFERENCES `jdbc_java`.`vehiculo` (`id`),
+  CONSTRAINT `fk_contrato_conductor`
+    FOREIGN KEY (`id_conductor`)
+    REFERENCES `jdbc_java`.`conductor` (`id`));
+
+CREATE TABLE `jdbc_java`.`ruta` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `estacion` VARCHAR(255) NOT NULL,
+  `id_vehiculo` INT,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_ruta_vehiculo`
+    FOREIGN KEY (`id_vehiculo`)
+    REFERENCES `jdbc_java`.`vehiculo` (`id`));
+
+INSERT INTO `jdbc_java`.`tipo_vehiculo`(`id`,`nombre`) VALUES (1, "Taxi");
+INSERT INTO `jdbc_java`.`tipo_vehiculo`(`id`,`nombre`) VALUES (2, "Bus");
